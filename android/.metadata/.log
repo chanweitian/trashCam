@@ -1,0 +1,32 @@
+!SESSION 2014-02-13 17:34:47.181 -----------------------------------------------
+eclipse.buildId=v22.3.0-887826
+java.version=1.6.0_65
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product com.android.ide.eclipse.adt.package.product -product com.android.ide.eclipse.adt.package.product -keyring /Users/napcrisis/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product com.android.ide.eclipse.adt.package.product -data /Users/napcrisis/trashCam/android -product com.android.ide.eclipse.adt.package.product -keyring /Users/napcrisis/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2014-02-13 17:34:52.289
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 1 0 2014-02-13 17:34:53.574
+!MESSAGE --- Workbench plugin started. ---
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 1 0 2014-02-13 17:34:53.576
+!MESSAGE --- Crashlytics Updater Plugin is starting ---
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 1 0 2014-02-13 17:34:53.578
+!MESSAGE Starting com.crashlytics.tools.eclipse.updater(1.3.0.201312161704) with location: /Applications/adt-bundle-mac-x86_64-20131030/eclipse/configuration/
+	 Managed plugins version: 0.0.0
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 0 0 2014-02-13 17:34:53.808
+!MESSAGE  OsgiBootstrapper - Installing 5 bundles from /Users/napcrisis/trashCam/android/.metadata/.plugins/com.crashlytics.tools.eclipse.workbench/.crashlytics_data/.bundles...
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 0 0 2014-02-13 17:34:53.866
+!MESSAGE  OsgiBootstrapper - Starting OSGi bundle com.crashlytics.tools.eclipse.app_1.3.0.201312161703 [906]
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 0 0 2014-02-13 17:34:53.923
+!MESSAGE  OsgiBootstrapper - Starting OSGi bundle com.crashlytics.tools.eclipse.core_1.3.0.201312161703 [907]
+
+!ENTRY com.crashlytics.tools.eclipse.workbench 0 0 2014-02-13 17:34:54.116
+!MESSAGE  OsgiBootstrapper - Starting OSGi bundle com.crashlytics.tools.eclipse.exporter_1.3.0.201312161703 [908]
