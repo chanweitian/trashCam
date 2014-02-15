@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import com.trashcam.model.DeleteFileModelManager;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -205,6 +207,8 @@ public class CameraPreview implements SurfaceHolder.Callback,
 						data.length);
 				FileOutputStream out = new FileOutputStream(NowPictureFileName);
 				bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+				DeleteFileModelManager.getInstance().addFile(
+						NowPictureFileName, 1, mContext);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
