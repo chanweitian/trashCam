@@ -1,0 +1,11 @@
+package com.trashcam.model;
+
+public class DeleteFileModel {
+	public String fileUrl;
+	public DeleteFileModel(String fileUrl, String dateToBeDeleted) {
+		super();
+		this.fileUrl = fileUrl;
+		this.dateToBeDeleted = dateToBeDeleted;
+	}
+	public String dateToBeDeleted;
+}

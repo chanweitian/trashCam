@@ -6,31 +6,27 @@ import android.support.v13.app.FragmentPagerAdapter;
 
 public class TrashAdapter extends FragmentPagerAdapter {
 	private GalleryFragment gallery;
-	private PictureFragment picture;
 	private CameraFragment camera;
 
 	public TrashAdapter(FragmentManager fm) {
 		super(fm);
-//		camera = new CameraFragment();
+		// camera = new CameraFragment();
 		gallery = new GalleryFragment();
-		picture = new PictureFragment();
 	}
 
 	@Override
 	public int getCount() {
-		return 1;// NEED TO CHANGE
+		return 2;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
-//		switch (position) {
-//		case 0:
-//			return camera;
-//		case 1:
-			return picture;
-//		default:
-//			return gallery;
-//		}
-
+		switch (position) {
+		case 0:
+			return gallery;
+		case 1:
+			return camera;
+		}
+		return null;
 	}
 }

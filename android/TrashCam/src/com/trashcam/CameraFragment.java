@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.trashcam.model.DeleteFileModelManager;
 import com.trashcam.widget.CameraPreview;
 
 public class CameraFragment extends Fragment implements OnClickListener {
@@ -30,8 +31,13 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	private Camera mCamera;
 	private CameraPreview mPreview;
 	private ImageView capture;
-	private FrameLayout preview;
+	private FrameLayout cameraFrameLayout;
 	private ImageView flip;
+	public int state_of_camera;
+	public static final int PICTURE_STATE = 1;
+	public static final int CAMERA_STATE = 0;
+	public int days = 1;
+	private boolean hasPaused;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,12 +45,26 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		View rootView = inflater.inflate(R.layout.fragment_camera, container,
 				false);
 		capture = (ImageView) rootView.findViewById(R.id.camera_button);
-		preview = (FrameLayout) rootView.findViewById(R.id.camera);
+		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
 		flip = (ImageView) rootView.findViewById(R.id.flip);
-		preview.addView(mPreview);
+		cameraFrameLayout.addView(mPreview);
 		capture.setOnClickListener(this);
 		flip.setOnClickListener(this);
+		hasPaused = false;
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		if (hasPaused)
+			mPreview.startCamera(CameraPreview.BACK_CAM_ID);
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		hasPaused = true;
+		super.onPause();
 	}
 
 	@Override
@@ -54,6 +74,10 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			Log.wtf(TAG, "CAMERA NOT FOUND");
 			throw new IllegalStateException("You got no camera");
 		}
+		if (Camera.getNumberOfCameras() == 1) {
+			flip.setVisibility(View.GONE);
+		}
+		state_of_camera = CAMERA_STATE;
 		mCamera = getCameraInstance();
 		mPreview = new CameraPreview(getActivity(), mCamera);
 		super.onCreate(savedInstanceState);
@@ -86,17 +110,20 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 
-			File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-			if (pictureFile == null) {
+			currentPictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+
+			if (currentPictureFile == null) {
 				Log.d(TAG,
 						"Error creating media file, check storage permissions: ");
 				return;
 			}
 
 			try {
-				FileOutputStream fos = new FileOutputStream(pictureFile);
+				FileOutputStream fos = new FileOutputStream(currentPictureFile);
 				fos.write(data);
 				fos.close();
+				DeleteFileModelManager.getInstance().addFile(
+						currentPictureFile, 1);
 			} catch (FileNotFoundException e) {
 				Log.d(TAG, "File not found: " + e.getMessage());
 			} catch (IOException e) {
@@ -104,6 +131,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			}
 		}
 	};
+	private File currentPictureFile;
 
 	private static File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
@@ -128,11 +156,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
 				.format(new Date());
 		File mediaFile = null;
-		if (type == MEDIA_TYPE_IMAGE) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + timeStamp + ".jpg");
-		}
-
+		mediaFile = new File(mediaStorageDir.getPath() + File.separator
+				+ "IMG_" + timeStamp + ".jpg");
 		return mediaFile;
 	}
 
@@ -140,10 +165,50 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.camera_button:
-			mCamera.takePicture(null, null, mPicture);
+			if (state_of_camera == CAMERA_STATE) {
+				mCamera.takePicture(null, null, mPicture);
+				state_of_camera = PICTURE_STATE;
+				flip.setImageResource(R.drawable.ic_trash);
+				capture.setImageResource(R.drawable.day1);
+			} else {
+				if (days == 4) {
+					days = 1;
+				}
+				switch (days) {
+				case 1:
+					capture.setImageResource(R.drawable.day1);
+					DeleteFileModelManager.getInstance().addFile(
+							currentPictureFile, 1);
+					break;
+				case 2:
+					capture.setImageResource(R.drawable.day2);
+					DeleteFileModelManager.getInstance().addFile(
+							currentPictureFile, 2);
+					break;
+				case 3:
+					capture.setImageResource(R.drawable.day3);
+					DeleteFileModelManager.getInstance().addFile(
+							currentPictureFile, 3);
+					break;
+				}
+				days++;
+			}
 			break;
-			
+
 		case R.id.flip:
+			if (state_of_camera == CAMERA_STATE) {
+				mPreview.flipCamera();
+			} else {
+				/*
+				 * Delete current file
+				 */
+				DeleteFileModelManager.getInstance().deleteFileNow(
+						currentPictureFile);
+				currentPictureFile = null;
+				mPreview.startCamera(CameraPreview.BACK_CAM_ID);
+				capture.setImageResource(R.drawable.ic_camera);
+				state_of_camera = CAMERA_STATE;
+			}
 			break;
 		}
 	}

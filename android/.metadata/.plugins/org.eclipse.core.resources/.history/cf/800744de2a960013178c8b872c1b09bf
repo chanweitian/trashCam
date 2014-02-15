@@ -1,0 +1,38 @@
+package com.trashcam;
+
+import java.util.ArrayList;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
+
+import com.trashcam.model.DeleteFileModel;
+
+public class TrashAdapter extends FragmentPagerAdapter {
+	private GalleryFragment gallery;
+	private CameraFragment camera;
+	public ArrayList<DeleteFileModel> toBeDeleted;
+
+	public TrashAdapter(FragmentManager fm) {
+		super(fm);
+		toBeDeleted = new ArrayList<DeleteFileModel>();
+		camera = new CameraFragment(this);
+		gallery = new GalleryFragment();
+	}
+
+	@Override
+	public int getCount() {
+		return 2;// NEED TO CHANGE
+	}
+
+	@Override
+	public Fragment getItem(int position) {
+		switch (position) {
+		case 0:
+			return gallery;
+		case 1:
+			return camera;
+		}
+		return null;
+	}
+}

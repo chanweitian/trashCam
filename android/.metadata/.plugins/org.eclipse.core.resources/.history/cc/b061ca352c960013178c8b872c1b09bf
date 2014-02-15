@@ -1,0 +1,25 @@
+package com.trashcam.model;
+
+import java.io.File;
+import java.util.Calendar;
+
+public class DeleteFileModel {
+	public String fileUrl;
+	public int days;
+	public String dateToBeDeleted;
+
+	public DeleteFileModel(String fileUrl, int days) {
+		super();
+		this.fileUrl = fileUrl;
+		this.dateToBeDeleted = dateToBeDeleted;
+	}
+
+	public DeleteFileModel(File file, int days) {
+		super();
+		this.fileUrl = file.getAbsolutePath();
+
+		Calendar c = Calendar.getInstance(); 
+		c.add(Calendar.DAY_OF_MONTH, days);
+		this.dateToBeDeleted = dateToBeDeleted;
+	}
+}

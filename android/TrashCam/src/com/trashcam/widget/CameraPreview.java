@@ -16,6 +16,9 @@ public class CameraPreview extends SurfaceView implements
 	private SurfaceHolder mHolder;
 	private Camera mCamera;
 	private Context mContext;
+	public static final int BACK_CAM_ID = 0;
+	public static final int FRONT_CAM_ID = 1;
+	private int currentCameraId = 0;
 
 	@SuppressWarnings("deprecation")
 	public CameraPreview(Context context, Camera camera) {
@@ -86,6 +89,36 @@ public class CameraPreview extends SurfaceView implements
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// empty. Take care of releasing the Camera preview in your activity.
+		mCamera.stopPreview();
+		mCamera.release();
+	}
+
+	public void startCamera(int cameraId) {
+		mCamera.stopPreview();
+		// NB: if you don't release the current camera before switching, you app
+		// will crash
+		mCamera.release();
+
+		mCamera = Camera.open(cameraId);
+		try {
+			// this step is critical or preview on new camera will no know where
+			// to render to
+			mCamera.setPreviewDisplay(mHolder);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		mCamera.startPreview();
+		setCameraDisplayOrientation();
+	}
+
+	public void flipCamera() {
+		// swap the id of the camera to be used
+		if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+			currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+		} else {
+			currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+		}
+		startCamera(currentCameraId);
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {

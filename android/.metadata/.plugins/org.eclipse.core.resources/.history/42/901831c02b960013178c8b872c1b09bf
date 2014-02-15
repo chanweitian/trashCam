@@ -1,0 +1,29 @@
+package com.trashcam;
+
+import java.io.File;
+
+import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
+import android.view.WindowManager;
+
+public class Utility {
+	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	public static int[] getScreenSize(Context context) {
+		WindowManager wm = (WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int[] ret = new int[2];
+		ret[0] = size.x;
+		ret[1] = size.y;
+		return ret;
+	}
+
+	public boolean deleteFile(String selectedFilePath) {
+		File file = new File(selectedFilePath);
+		return file.delete();
+	}
+	
+}

@@ -31,10 +31,6 @@ import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public class PictureFragment extends Fragment {
-
-	
-	
-
 	private RelativeLayout relativeLayout;
 	private String message = "I have uploaded a new photo via TrashCam!";
 	private String mediaStorageDir = new File(
