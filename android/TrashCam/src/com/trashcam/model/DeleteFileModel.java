@@ -12,10 +12,11 @@ public class DeleteFileModel {
 	public DeleteFileModel(String fileUrl, int days) {
 		super();
 		this.fileUrl = fileUrl;
+		this.days = days;
 		this.dateToBeDeleted = Utility.getDateAfter(days);
 	}
 
 	public DeleteFileModel(File file, int days) {
-		this(file.getAbsolutePath(),days);
+		this(file.getAbsolutePath(), days);
 	}
 }

@@ -1,8 +1,8 @@
 package com.trashcam.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import android.app.AlarmManager;
@@ -57,13 +57,16 @@ public class DeleteFileModelManager {
 	}
 
 	private static DeleteFileModel[] extract() {
-		DeleteFileModel[] data = new DeleteFileModel[toBeDeleted.size()];
-		int x = 0;
+		ArrayList<DeleteFileModel> data = new ArrayList<DeleteFileModel>();
 		for (String s : toBeDeleted.keySet()) {
-			data[x] = toBeDeleted.get(s);
-			x++;
+			try {
+				if (new File(s).exists()) {
+					data.add(toBeDeleted.get(s));
+				}
+			} catch (Exception e) {
+			}
 		}
-		return data;
+		return data.toArray(new DeleteFileModel[data.size()]);
 	}
 
 	public void addFile(String path, int days, Context context) {

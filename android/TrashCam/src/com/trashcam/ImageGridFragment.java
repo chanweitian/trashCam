@@ -17,7 +17,9 @@
 package com.trashcam;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -34,6 +36,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -139,7 +144,7 @@ public class ImageGridFragment extends Fragment implements
 	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		String url = (String) v.getTag();
+		String url = (String) v.getTag(R.string.empty);
 		Intent intent = new Intent(getActivity(), FullScreenActivity.class);
 		intent.putExtra("url", url);
 		getActivity().startActivity(intent);
@@ -157,7 +162,7 @@ public class ImageGridFragment extends Fragment implements
 		private int mItemHeight = 0;
 		private int mNumColumns = 0;
 		private int mActionBarHeight = 0;
-		private GridView.LayoutParams mImageViewLayoutParams;
+		private RelativeLayout.LayoutParams mImageViewLayoutParams;
 
 		public ImageAdapter(Context context, String data2) {
 			super();
@@ -167,7 +172,7 @@ public class ImageGridFragment extends Fragment implements
 				Gson gson = new Gson();
 				data = gson.fromJson(data2, DeleteFileModel[].class);
 			}
-			mImageViewLayoutParams = new GridView.LayoutParams(
+			mImageViewLayoutParams = new RelativeLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		}
 
@@ -210,8 +215,29 @@ public class ImageGridFragment extends Fragment implements
 			return true;
 		}
 
+		class RecordHolder {
+			TextView txtTitle;
+			ImageView imageItem;
+		}
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup container) {
+			View row = convertView;
+			RecordHolder holder = null;
+			if (row == null) {
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				row = inflater.inflate(R.layout.row_grid, container, false);
+				holder = new RecordHolder();
+				holder.txtTitle = (TextView) row.findViewById(R.id.item_text);
+				holder.imageItem = (ImageView) row
+						.findViewById(R.id.item_image);
+				holder.imageItem.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				holder.imageItem.setLayoutParams(mImageViewLayoutParams);
+				row.setTag(holder);
+			} else {
+				holder = (RecordHolder) row.getTag();
+			}
+
 			// First check if this is the top row
 			if (position < mNumColumns) {
 				if (convertView == null) {
@@ -223,40 +249,23 @@ public class ImageGridFragment extends Fragment implements
 				return convertView;
 			}
 
-			// Now handle the main ImageView thumbnails
-			ImageView imageView;
-			if (convertView == null) { // if it's not recycled, instantiate and
-										// initialize
-				imageView = new ImageView(mContext);
-				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setLayoutParams(mImageViewLayoutParams);
-			} else { // Otherwise re-use the converted view
-				imageView = (ImageView) convertView;
-			}
-
-			// Check the height matches our calculated column width
-			if (imageView.getLayoutParams().height != mItemHeight) {
-				imageView.setLayoutParams(mImageViewLayoutParams);
-			}
-
 			// Finally load the image asynchronously into the ImageView, this
 			// also takes care of
 			// setting a placeholder image while the background thread runs
-
-			Log.w("WeitianPosition", "" + position);
-			Log.w("WeitianDAta", "" + data.length);
 			// TODO:LOAD IMAGE HERE
 			int index = position - mNumColumns;
-			Log.w("WeitianIndex", "" + index);
 
 			String uri = "file://" + data[index].fileUrl;
-			imageloader.displayImage(uri, imageView);
-			imageView.setTag(uri);
-			return imageView;
+			imageloader.displayImage(uri, holder.imageItem);
+			row.setTag(R.string.empty, uri);
+
+			holder.txtTitle.setText(data[index].days + " days");
+
+			return row;
 		}
 
-//layout is not to design standard
-//days are wrong
+		// layout is not to design standard
+		// days are wrong
 		/**
 		 * Sets the item height. Useful for when we know the column width so the
 		 * height can be set to match.
@@ -268,7 +277,7 @@ public class ImageGridFragment extends Fragment implements
 				return;
 			}
 			mItemHeight = height;
-			mImageViewLayoutParams = new GridView.LayoutParams(
+			mImageViewLayoutParams = new RelativeLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, mItemHeight);
 
 			notifyDataSetChanged();
