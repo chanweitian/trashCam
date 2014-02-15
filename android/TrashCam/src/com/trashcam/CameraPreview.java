@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -12,7 +13,9 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
+import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 public class CameraPreview implements SurfaceHolder.Callback,
 		Camera.PreviewCallback {
@@ -21,8 +24,11 @@ public class CameraPreview implements SurfaceHolder.Callback,
 	private int PreviewSizeHeight;
 	private String NowPictureFileName;
 	private Boolean TakePicture = false;
+	private Context mContext;
 
-	public CameraPreview(int PreviewlayoutWidth, int PreviewlayoutHeight) {
+	public CameraPreview(Context mContext, int PreviewlayoutWidth,
+			int PreviewlayoutHeight) {
+		this.mContext = mContext;
 		PreviewSizeWidth = PreviewlayoutWidth;
 		PreviewSizeHeight = PreviewlayoutHeight;
 	}
@@ -31,6 +37,10 @@ public class CameraPreview implements SurfaceHolder.Callback,
 	public void onPreviewFrame(byte[] arg0, Camera arg1) {
 		// At preview mode, the frame data will push to here.
 		// But we do not want these data.
+	}
+
+	public void startCameraPreview() {
+		mCamera.startPreview();
 	}
 
 	@Override
@@ -42,22 +52,54 @@ public class CameraPreview implements SurfaceHolder.Callback,
 		Size mPreviewSize = getOptimalPreviewSize(mCamera.getParameters()
 				.getSupportedPreviewSizes(), PreviewSizeWidth,
 				PreviewSizeHeight);
-
-		parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height); 
-//		parameters.setPictureSize(PreviewSizeWidth, PreviewSizeHeight);
+		List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
+		Size mPictureSize = getOptimalPreviewSize(sizes, PreviewSizeWidth,
+				PreviewSizeHeight);
+		parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+		parameters.setPictureSize(mPictureSize.width, mPictureSize.height);
 
 		// Turn on the camera flash.
-		String NowFlashMode = parameters.getFlashMode();
-		if (NowFlashMode != null)
-			parameters.setFlashMode(Parameters.FLASH_MODE_ON);
+		// String NowFlashMode = parameters.getFlashMode();
+		// if (NowFlashMode != null)
+		// parameters.setFlashMode(Parameters.FLASH_MODE_ON);
 		// Set the auto-focus.
 		String NowFocusMode = parameters.getFocusMode();
 		if (NowFocusMode != null)
 			parameters.setFocusMode("auto");
-
+		setCameraDisplayOrientation();
 		mCamera.setParameters(parameters);
-
 		mCamera.startPreview();
+	}
+
+	public void setCameraDisplayOrientation() {
+		Camera.CameraInfo info = new Camera.CameraInfo();
+		Camera.getCameraInfo(0, info);
+		WindowManager winManager = (WindowManager) mContext
+				.getSystemService(Context.WINDOW_SERVICE);
+		int rotation = winManager.getDefaultDisplay().getRotation();
+		int degrees = 0;
+		switch (rotation) {
+		case Surface.ROTATION_0:
+			degrees = 0;
+			break;
+		case Surface.ROTATION_90:
+			degrees = 90;
+			break;
+		case Surface.ROTATION_180:
+			degrees = 180;
+			break;
+		case Surface.ROTATION_270:
+			degrees = 270;
+			break;
+		}
+		int result;
+		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			result = (info.orientation + degrees) % 360;
+			result = (360 - result) % 360; // compensate the mirror
+		} else { // back-facing
+			result = (info.orientation - degrees + 360) % 360;
+		}
+		mCamera.setDisplayOrientation(result);
 	}
 
 	private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w,
