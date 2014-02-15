@@ -1,9 +1,0 @@
-package com.trashcam.model;
-
-public class DeleteFileModelManager {
-	private DeleteFileModelManager instance;
-
-	private DeleteFileModelManager() {
-
-	}
-}

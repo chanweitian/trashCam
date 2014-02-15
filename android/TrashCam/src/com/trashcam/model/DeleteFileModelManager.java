@@ -51,13 +51,18 @@ public class DeleteFileModelManager {
 
 	public static void save() {
 		Gson gson = new Gson();
+		DeleteFileModel[] data = extract();
+		HashTable.insert_entry(HashTable.DELETABLES, gson.toJson(data));
+	}
+
+	private static DeleteFileModel[] extract() {
 		DeleteFileModel[] data = new DeleteFileModel[toBeDeleted.size()];
 		int x = 0;
 		for (String s : toBeDeleted.keySet()) {
 			data[x] = toBeDeleted.get(s);
 			x++;
 		}
-		HashTable.insert_entry(HashTable.DELETABLES, gson.toJson(data));
+		return data;
 	}
 
 	public void addFile(String path, int days, Context context) {
@@ -85,7 +90,7 @@ public class DeleteFileModelManager {
 		PendingIntent pendingIntent = PendingIntent.getService(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarmManager.set(AlarmManager.RTC_WAKEUP,
-				Utility.getDateAfterInLong(days) + 10000, pendingIntent);
+				Utility.getDateAfterInLong(days) + 60000, pendingIntent);
 		Log.w("There", "THere");
 
 		/*
@@ -110,5 +115,10 @@ public class DeleteFileModelManager {
 	public void deleteFileNow(File file_to_be_deleted) {
 		removeIfExist(file_to_be_deleted);
 		boolean successful = file_to_be_deleted.delete();
+	}
+
+	public static String getJson() {
+		Gson gson = new Gson();
+		return gson.toJson(extract());
 	}
 }

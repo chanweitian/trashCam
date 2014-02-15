@@ -1,5 +1,7 @@
 package com.trashcam;
 
+import com.trashcam.model.DeleteFileModelManager;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
@@ -28,7 +30,9 @@ public class MainActivity extends SingleFragmentActivity {
 
 		setContentView(R.layout.activity_main);
 		MainDatabase.initMainDB(this);
+		DeleteFileModelManager.getInstance();
 		super.onCreate(savedInstanceState);
+
 	}
 
 	@Override

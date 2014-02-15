@@ -6,5 +6,8 @@
     <dimen name="default_margin">30dp</dimen>
     <dimen name="negative_margin">-20dp</dimen>
     <dimen name="btm_margin">10dp</dimen>
+    <dimen name="image_thumbnail_size">100dp</dimen>
+    <dimen name="image_thumbnail_spacing">1dp</dimen>
+    <dimen name="image_detail_pager_margin">80dp</dimen>
 
 </resources>

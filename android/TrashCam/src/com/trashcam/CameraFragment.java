@@ -6,6 +6,7 @@ import java.util.Date;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -101,7 +102,6 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onPause() {
 		hasPaused = true;
-		DeleteFileModelManager.save();
 		super.onPause();
 	}
 
@@ -184,10 +184,12 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.gallery:
 			// START GALLERY
-			// Intent intent = new Intent(getActivity(),);
-			// startActivity(intent);
-			String s = HashTable.get_entry(HashTable.DELETABLES);
+			Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+			String s = DeleteFileModelManager.getJson();
 			Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+			intent.putExtra("wtf", s);
+			getActivity().startActivity(intent);
+
 			break;
 		}
 	}
@@ -262,8 +264,10 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	}
 
 	public void confirm() {
-		if (currentPicturePath != null && !"".equals(currentPicturePath))
+		if (currentPicturePath != null && !"".equals(currentPicturePath)) {
 			DeleteFileModelManager.getInstance().addFile(currentPicturePath,
 					day, getActivity());
+
+		}
 	}
 }
