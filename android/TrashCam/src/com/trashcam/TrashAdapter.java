@@ -11,26 +11,26 @@ public class TrashAdapter extends FragmentPagerAdapter {
 
 	public TrashAdapter(FragmentManager fm) {
 		super(fm);
-		camera = new CameraFragment();
+//		camera = new CameraFragment();
 		gallery = new GalleryFragment();
 		picture = new PictureFragment();
 	}
 
 	@Override
 	public int getCount() {
-		return 3;// NEED TO CHANGE
+		return 1;// NEED TO CHANGE
 	}
 
 	@Override
 	public Fragment getItem(int position) {
-		switch (position) {
-		case 0:
-			return camera;
-		case 1:
+//		switch (position) {
+//		case 0:
+//			return camera;
+//		case 1:
 			return picture;
-		default:
-			return gallery;
-		}
+//		default:
+//			return gallery;
+//		}
 
 	}
 }
