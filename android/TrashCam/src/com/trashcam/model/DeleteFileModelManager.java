@@ -51,11 +51,12 @@ public class DeleteFileModelManager {
 		
 		Log.w("Here", "Here");
 		Intent intent = new Intent();
+		Calendar calendar = Calendar.getInstance();
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		intent.setClass(context, DeleteIntent.class);
 		intent.putExtra("path", path);
 		PendingIntent pendingIntent  = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, Utility.getDateAfterInLong(days), pendingIntent);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 5000, pendingIntent);
 		Log.w("There", "THere");
 		
 		/*
