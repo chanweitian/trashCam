@@ -137,17 +137,17 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				case 1:
 					capture.setImageResource(R.drawable.day1);
 					DeleteFileModelManager.getInstance().addFile(
-							currentPicturePath, 1);
+							currentPicturePath, 1, getActivity());
 					break;
 				case 2:
 					capture.setImageResource(R.drawable.day2);
 					DeleteFileModelManager.getInstance().addFile(
-							currentPicturePath, 2);
+							currentPicturePath, 2, getActivity());
 					break;
 				case 3:
 					capture.setImageResource(R.drawable.day3);
 					DeleteFileModelManager.getInstance().addFile(
-							currentPicturePath, 3);
+							currentPicturePath, 3, getActivity());
 					break;
 				}
 				days++;

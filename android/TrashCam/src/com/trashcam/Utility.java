@@ -46,9 +46,17 @@ public class Utility {
 
 	public static String getDateAfter(int days) {
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DAY_OF_MONTH, days);
+		c.add(Calendar.SECOND, days);
 		return dateFormat.format(c.getTime());
 	}
+	
+	public static long getDateAfterInLong(int days) {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.SECOND, days);
+		return c.getTimeInMillis();
+	}
+	
+
 
 	public static void openShareDialog(final Context context,
 			final String message, final String imagePath) {

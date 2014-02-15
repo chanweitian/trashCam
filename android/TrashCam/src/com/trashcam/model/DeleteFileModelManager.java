@@ -1,7 +1,17 @@
 package com.trashcam.model;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.HashMap;
+
+import com.trashcam.Utility;
+
+
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 
 public class DeleteFileModelManager {
 	private static DeleteFileModelManager instance;
@@ -23,11 +33,11 @@ public class DeleteFileModelManager {
 		return instance;
 	}
 
-	public void addFile(String path, int days) {
-		addFile(new File(path), days);
+	public void addFile(String path, int days, Context context) {
+		addFile(new File(path), days, context, path);
 	}
 
-	public void addFile(File new_picture, int days) {
+	public void addFile(File new_picture, int days, Context context, String path) {
 		if (new_picture == null) {
 			throw new IllegalStateException("new_picture NOT INITED");
 		}
@@ -37,9 +47,20 @@ public class DeleteFileModelManager {
 		removeIfExist(new_picture);
 		toBeDeleted.put(new_picture.getAbsolutePath(), new DeleteFileModel(
 				new_picture, days));
+		
+		Intent intent = new Intent();
+		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		intent.setClass(context, DeleteIntent.class);
+		intent.putExtra("path", path);
+		PendingIntent pendingIntent  = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, Utility.getDateAfterInLong(days), pendingIntent);
+		
+		
 		/*
 		 * TODO: save to database also
 		 */
+		
+		
 	}
 
 	private void removeIfExist(File new_picture) {
