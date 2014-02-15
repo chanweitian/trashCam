@@ -1,25 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sharedialog"
     android:layout_width="match_parent"
-    android:background="@drawable/paperbg"
-    android:layout_height="300px" >
-    
+    android:layout_height="900px"
+    android:background="@drawable/paperbg" >
+
     <TextView
         android:id="@+id/text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
         android:gravity="center"
-        android:textSize="30sp"
-        android:textColor="#FFF" />
- 
-     <Button
-        android:id="@+id/dialogButtonOK"
-        android:layout_width="100px"
+        android:paddingTop="20dp"
+        android:textColor="#FFF"
+        android:textSize="25sp" />
+
+    <ImageView
+        android:id="@+id/shareclose"
+        android:src="@drawable/close_icon" 
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" Ok "
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"/>
+
+    <View
+        android:id="@+id/View01"
+        android:layout_width="250dp"
+        android:layout_height="1dip"
+        android:layout_below="@+id/text"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        />
+        android:background="#c7c7c7" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/View01"
+        android:layout_marginTop="15dp"
+        android:weightSum="4" >
+
+        <ImageView
+            android:id="@+id/shareFB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/share_fb" />
+
+        <ImageView
+            android:id="@+id/shareTwitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/share_twitter" />
+
+        <ImageView
+            android:id="@+id/shareEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/share_email" />
+
+        <ImageView
+            android:id="@+id/shareWhatapps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/share_whatapps" />
+    </LinearLayout>
 
 </RelativeLayout>
