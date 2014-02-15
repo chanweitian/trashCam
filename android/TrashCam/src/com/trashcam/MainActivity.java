@@ -73,17 +73,23 @@ public class MainActivity extends SingleFragmentActivity {
 				final int pointerIndex = MotionEventCompat.findPointerIndex(ev,
 						mActivePointerId);
 				final float y = MotionEventCompat.getY(ev, pointerIndex) * -1;
-				Log.d(TAG, "Y is: " + y);
+				Log.w(TAG, "Y is: " + y);
 				// Calculate the distance mov
 				dy = y - mLastTouchY;
 	
-				if (dy < 0) {
-					dy = 0;
+				dy =  dy / 70;
+				int val;
+				
+				if (dy > 0){
+					val = (int)dy + 1;
+				} else {
+					val = (int)dy - 1;
 				}
 	
-				int val = (int) dy / 70;
-				Log.v(TAG, "" + val + 1);
-				camFragment.setDayForCurrentFile(val + 1);
+				
+				Log.w(TAG, "" + val);
+				camFragment.setDayForCurrentFile(val);
+				
 				// Log.d(TAG, "Distance is: " + dy);
 			} catch (Exception e){
 				e.printStackTrace();
