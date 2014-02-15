@@ -1,29 +1,25 @@
 package com.trashcam;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -42,9 +38,9 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	public int days = 1;
 	private ImageView share;
 	private CameraPreview camPreview;
-
 	private Handler mHandler = new Handler(Looper.getMainLooper());
 	private String currentPicturePath;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +77,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		int previewSizeHeight = xy[1];
 		SurfaceView camView = new SurfaceView(getActivity());
 		SurfaceHolder camHolder = camView.getHolder();
-		camPreview = new CameraPreview(previewSizeWidth, previewSizeHeight);
+		camPreview = new CameraPreview(getActivity(), previewSizeWidth,
+				previewSizeHeight);
 
 		camHolder.addCallback(camPreview);
 		camHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -181,5 +178,6 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		state_of_camera = CAMERA_STATE;
 		share.setVisibility(View.GONE);
 		currentPicturePath = null;
+		camPreview.startCameraPreview();
 	}
 }
