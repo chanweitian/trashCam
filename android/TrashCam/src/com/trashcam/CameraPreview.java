@@ -1,10 +1,11 @@
 package com.trashcam;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import com.trashcam.model.DeleteFileModelManager;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,9 +16,13 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
+
+import com.trashcam.model.DeleteFileModelManager;
 
 public class CameraPreview implements SurfaceHolder.Callback,
 		Camera.PreviewCallback {
@@ -215,4 +220,5 @@ public class CameraPreview implements SurfaceHolder.Callback,
 		}
 	};
 
+	
 }

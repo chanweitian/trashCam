@@ -1,6 +1,8 @@
 package com.trashcam;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -10,10 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -119,14 +119,9 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				.toString();
 
 		public void run() {
-			String MyDirectory_path = extStorageDirectory;
-
-			File file = new File(MyDirectory_path);
-			if (!file.exists())
-				file.mkdirs();
-			String PictureFileName = MyDirectory_path + "/MyPicture.jpg";
-			currentPicturePath = PictureFileName;
-			camPreview.CameraTakePicture(PictureFileName);
+			File file = getOutputMediaFile();
+			currentPicturePath = file.getAbsolutePath();
+			camPreview.CameraTakePicture(currentPicturePath);
 		}
 	};
 
@@ -193,5 +188,32 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		state_of_camera = CAMERA_STATE;
 		share.setVisibility(View.GONE);
 		currentPicturePath = null;
+	}
+
+	private static File getOutputMediaFile() {
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+
+		File mediaStorageDir = new File(
+				Environment
+						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				"MyCameraApp");
+		// This location works best if you want the created images to be shared
+		// between applications and persist after your app has been uninstalled.
+
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(new Date());
+		File mediaFile = new File(mediaStorageDir.getPath() + File.separator
+				+ "IMG_" + timeStamp + ".jpg");
+		return mediaFile;
 	}
 }
