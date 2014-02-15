@@ -1,28 +1,22 @@
 package com.trashcam;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
-import android.os.Environment;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
-
-import com.trashcam.model.DeleteFileModelManager;
 
 public class CameraPreview implements SurfaceHolder.Callback,
 		Camera.PreviewCallback {
@@ -191,7 +185,7 @@ public class CameraPreview implements SurfaceHolder.Callback,
 				NowCamera.takePicture(shutterCallback, rawPictureCallback,
 						jpegPictureCallback);
 				TakePicture = false;
-				
+
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -220,8 +214,14 @@ public class CameraPreview implements SurfaceHolder.Callback,
 			try {
 				Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0,
 						data.length);
+				Matrix matrix = new Matrix();
+				matrix.postRotate(90);
+				bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+						bitmap.getHeight(), matrix, true);
 				FileOutputStream out = new FileOutputStream(NowPictureFileName);
 				bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+				out.flush();
+				out.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
