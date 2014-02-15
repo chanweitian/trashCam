@@ -22,3 +22,6 @@
 1392460854151	Rename field 'pictureFile'
 1392461213916	Extract method 'removeIfExist'
 1392464485453	Rename resource 'share.png'
+1392472000355	Delete element
+1392472240919	Rename local variable 'PreviewSizeHeight'
+1392472245552	Rename local variable 'PreviewSizeWidth'

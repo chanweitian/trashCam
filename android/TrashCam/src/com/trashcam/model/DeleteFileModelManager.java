@@ -23,11 +23,15 @@ public class DeleteFileModelManager {
 		return instance;
 	}
 
+	public void addFile(String path, int days) {
+		addFile(new File(path), days);
+	}
+
 	public void addFile(File new_picture, int days) {
-		if(new_picture==null){
+		if (new_picture == null) {
 			throw new IllegalStateException("new_picture NOT INITED");
 		}
-		if(toBeDeleted==null){
+		if (toBeDeleted == null) {
 			throw new IllegalStateException("TOBEDELETED NOT INITED");
 		}
 		removeIfExist(new_picture);

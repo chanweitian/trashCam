@@ -18,8 +18,16 @@
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="com.trashcam.R.drawable"/>
-<fullyQualifiedTypeName name="com.trashcam.widget.CameraPreview"/>
 <fullyQualifiedTypeName name="com.trashcam.MainActivity"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="com.trashcam.TrashAdapter"/>
+<fullyQualifiedTypeName name="java.util.Calendar"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="com.trashcam.model.DeleteFileModel"/>
+<fullyQualifiedTypeName name="com.trashcam.model.DeleteFileModelManager"/>
+<fullyQualifiedTypeName name="com.trashcam.Constants"/>
+<fullyQualifiedTypeName name="com.trashcam.widget.CameraPreview"/>
+<fullyQualifiedTypeName name="android.widget.FrameLayout"/>
+<fullyQualifiedTypeName name="android.widget.FrameLayout.LayoutParams"/>
+<fullyQualifiedTypeName name="com.trashcam.Utility"/>
 </qualifiedTypeNameHistroy>
