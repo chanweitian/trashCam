@@ -40,7 +40,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	private CameraPreview camPreview;
 	private Handler mHandler = new Handler(Looper.getMainLooper());
 	private String currentPicturePath;
-
+	private boolean hasPaused;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,18 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		cameraFrameLayout.addView(camView, new LayoutParams(previewSizeWidth,
 				previewSizeHeight));
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		resetCameraUI();
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		hasPaused = true;
+		super.onPause();
 	}
 
 	/** Check if this device has a camera */
