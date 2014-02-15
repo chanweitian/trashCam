@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public class PictureFragment extends Fragment {
+	
+
 	private RelativeLayout relativeLayout;
 
 	@Override

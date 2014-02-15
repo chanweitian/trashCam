@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-@SuppressLint("NewApi")
 public class PictureFragment extends Fragment {
 	private RelativeLayout relativeLayout;
 

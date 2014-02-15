@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,14 @@ import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public class PictureFragment extends Fragment {
+
+<<<<<<< HEAD
+=======
+	
+	
+
 	private RelativeLayout relativeLayout;
+>>>>>>> 6883222568053c79962bb1ec9344cce8a6cc5084
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
