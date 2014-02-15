@@ -14,22 +14,25 @@ import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.trashcam.model.DeleteFileModelManager;
-import com.trashcam.widget.CameraPreview;
 
 public class CameraFragment extends Fragment implements OnClickListener {
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static final String TAG = CameraFragment.class.getSimpleName();
-	private Camera mCamera;
-	private CameraPreview mPreview;
 	private ImageView capture;
 	private FrameLayout cameraFrameLayout;
 	private ImageView flip;
@@ -37,35 +40,11 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	public static final int PICTURE_STATE = 1;
 	public static final int CAMERA_STATE = 0;
 	public int days = 1;
-	private boolean hasPaused;
+	private ImageView share;
+	private CameraPreview camPreview;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_camera, container,
-				false);
-		capture = (ImageView) rootView.findViewById(R.id.camera_button);
-		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
-		flip = (ImageView) rootView.findViewById(R.id.flip);
-		cameraFrameLayout.addView(mPreview);
-		capture.setOnClickListener(this);
-		flip.setOnClickListener(this);
-		hasPaused = false;
-		return rootView;
-	}
-
-	@Override
-	public void onResume() {
-		if (hasPaused)
-			mPreview.startCamera(CameraPreview.BACK_CAM_ID);
-		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		hasPaused = true;
-		super.onPause();
-	}
+	private Handler mHandler = new Handler(Looper.getMainLooper());
+	private String currentPicturePath;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +57,38 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			flip.setVisibility(View.GONE);
 		}
 		state_of_camera = CAMERA_STATE;
-		mCamera = getCameraInstance();
-		mPreview = new CameraPreview(getActivity(), mCamera);
 		super.onCreate(savedInstanceState);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_camera, container,
+				false);
+		capture = (ImageView) rootView.findViewById(R.id.camera_button);
+		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
+		flip = (ImageView) rootView.findViewById(R.id.flip);
+		share = (ImageView) rootView.findViewById(R.id.share);
+
+		capture.setOnClickListener(this);
+		flip.setOnClickListener(this);
+		share.setOnClickListener(this);
+
+		share.setVisibility(View.GONE);
+		int xy[] = Utility.getScreenSize(getActivity());
+		int previewSizeWidth = xy[0];
+		int previewSizeHeight = xy[1];
+		SurfaceView camView = new SurfaceView(getActivity());
+		SurfaceHolder camHolder = camView.getHolder();
+		camPreview = new CameraPreview(previewSizeWidth, previewSizeHeight);
+
+		camHolder.addCallback(camPreview);
+		camHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+		cameraFrameLayout.addView(camView, new LayoutParams(previewSizeWidth,
+				previewSizeHeight));
+		return rootView;
 	}
 
 	/** Check if this device has a camera */
@@ -95,81 +103,32 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	public static Camera getCameraInstance() {
-		Camera c = null;
-		try {
-			c = Camera.open(); // attempt to get a Camera instance
-		} catch (Exception e) {
-			// Camera is not available (in use or does not exist)
-		}
-		return c; // returns null if camera is unavailable
-	}
+	private Runnable takePicture = new Runnable() {
+		String extStorageDirectory = Environment.getExternalStorageDirectory()
+				.toString();
 
-	private PictureCallback mPicture = new PictureCallback() {
+		public void run() {
+			String MyDirectory_path = extStorageDirectory;
 
-		@Override
-		public void onPictureTaken(byte[] data, Camera camera) {
-
-			currentPictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-
-			if (currentPictureFile == null) {
-				Log.d(TAG,
-						"Error creating media file, check storage permissions: ");
-				return;
-			}
-
-			try {
-				FileOutputStream fos = new FileOutputStream(currentPictureFile);
-				fos.write(data);
-				fos.close();
-				DeleteFileModelManager.getInstance().addFile(
-						currentPictureFile, 1);
-			} catch (FileNotFoundException e) {
-				Log.d(TAG, "File not found: " + e.getMessage());
-			} catch (IOException e) {
-				Log.d(TAG, "Error accessing file: " + e.getMessage());
-			}
+			File file = new File(MyDirectory_path);
+			if (!file.exists())
+				file.mkdirs();
+			String PictureFileName = MyDirectory_path + "/MyPicture.jpg";
+			currentPicturePath = PictureFileName;
+			camPreview.CameraTakePicture(PictureFileName);
 		}
 	};
-	private File currentPictureFile;
-
-	private static File getOutputMediaFile(int type) {
-		// To be safe, you should check that the SDCard is mounted
-		// using Environment.getExternalStorageState() before doing this.
-
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				Constants.TRASH_FOLDER_PATH);
-		// This location works best if you want the created images to be shared
-		// between applications and persist after your app has been uninstalled.
-
-		// Create the storage directory if it does not exist
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
-
-		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
-		File mediaFile = null;
-		mediaFile = new File(mediaStorageDir.getPath() + File.separator
-				+ "IMG_" + timeStamp + ".jpg");
-		return mediaFile;
-	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.camera_button:
 			if (state_of_camera == CAMERA_STATE) {
-				mCamera.takePicture(null, null, mPicture);
+				mHandler.postDelayed(takePicture, 50);
 				state_of_camera = PICTURE_STATE;
 				flip.setImageResource(R.drawable.ic_trash);
 				capture.setImageResource(R.drawable.day1);
+				share.setVisibility(View.VISIBLE);
 			} else {
 				if (days == 4) {
 					days = 1;
@@ -178,17 +137,17 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				case 1:
 					capture.setImageResource(R.drawable.day1);
 					DeleteFileModelManager.getInstance().addFile(
-							currentPictureFile, 1);
+							currentPicturePath, 1);
 					break;
 				case 2:
 					capture.setImageResource(R.drawable.day2);
 					DeleteFileModelManager.getInstance().addFile(
-							currentPictureFile, 2);
+							currentPicturePath, 2);
 					break;
 				case 3:
 					capture.setImageResource(R.drawable.day3);
 					DeleteFileModelManager.getInstance().addFile(
-							currentPictureFile, 3);
+							currentPicturePath, 3);
 					break;
 				}
 				days++;
@@ -197,19 +156,30 @@ public class CameraFragment extends Fragment implements OnClickListener {
 
 		case R.id.flip:
 			if (state_of_camera == CAMERA_STATE) {
-				mPreview.flipCamera();
+				// mPreview.flipCamera();
 			} else {
 				/*
 				 * Delete current file
 				 */
 				DeleteFileModelManager.getInstance().deleteFileNow(
-						currentPictureFile);
-				currentPictureFile = null;
-				mPreview.startCamera(CameraPreview.BACK_CAM_ID);
-				capture.setImageResource(R.drawable.ic_camera);
-				state_of_camera = CAMERA_STATE;
+						currentPicturePath);
+				resetCameraUI();
 			}
 			break;
+		case R.id.share:
+			Toast.makeText(getActivity(), currentPicturePath, Toast.LENGTH_LONG)
+					.show();
+			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
+					currentPicturePath);
+			break;
 		}
+	}
+
+	public void resetCameraUI() {
+		flip.setImageResource(R.id.flip);
+		capture.setImageResource(R.drawable.ic_camera);
+		state_of_camera = CAMERA_STATE;
+		share.setVisibility(View.GONE);
+		currentPicturePath = null;
 	}
 }
