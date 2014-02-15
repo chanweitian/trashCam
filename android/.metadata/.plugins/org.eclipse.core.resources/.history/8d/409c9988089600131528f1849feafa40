@@ -1,0 +1,5 @@
+package com.trashcam.widget;
+
+public class CameraPreview {
+
+}
