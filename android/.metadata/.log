@@ -905,3 +905,123 @@ Binding(CTRL+SHIFT+ARROW_LEFT,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.wst.sse.ui.structuredTextEditorScope,,cocoa,system)
+
+!ENTRY com.crashlytics.tools.eclipse.core 2 0 2014-02-15 13:45:49.135
+!MESSAGE Crashlytics had a problem querying for a software update.
+Stack trace:
+java.net.UnknownHostException: api.crashlytics.com
+api.crashlytics.com
+java.net.UnknownHostException: api.crashlytics.com
+	at java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.net.InetAddress$1.lookupAllHostAddr(InetAddress.java:883)
+	at java.net.InetAddress.getAddressFromNameService(InetAddress.java:1236)
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1187)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1117)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1053)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:102)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:314)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:357)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:218)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:194)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:85)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:108)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:186)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:106)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:57)
+	at com.crashlytics.api.RestfulWebApi.requestJSON(RestfulWebApi.java:696)
+	at com.crashlytics.api.RestfulWebApi.getJSON(RestfulWebApi.java:679)
+	at com.crashlytics.api.RestfulWebApi.getSoftwareIntegration(RestfulWebApi.java:752)
+	at com.crashlytics.tools.ide.android.AbstractAndroidIde.findPlatformUpdate(AbstractAndroidIde.java:241)
+	at com.crashlytics.tools.eclipse.EclipseUpdateFinder.findIntegration(EclipseUpdateFinder.java:41)
+	at com.crashlytics.tools.eclipse.EclipseUpdateFinder.findBootstrapperUpdate(EclipseUpdateFinder.java:74)
+	at com.crashlytics.tools.eclipse.EclipseUpdateFinder.findBootstrapperUpdate(EclipseUpdateFinder.java:1)
+	at com.crashlytics.tools.bootstrap.UpdateManager.updateBootstrapper(UpdateManager.java:121)
+	at com.crashlytics.tools.bootstrap.UpdateManager$WorkerRunnable.checkForUpdates(UpdateManager.java:94)
+	at com.crashlytics.tools.bootstrap.UpdateManager$WorkerRunnable.run(UpdateManager.java:75)
+	at java.lang.Thread.run(Thread.java:695)
+
+
+!ENTRY com.crashlytics.tools.eclipse.core 4 0 2014-02-15 13:45:49.137
+!MESSAGE Crashlytics execution failed during its update of the SDK for api key 47b1ef3b073ea426cfb9dad03cf26a175293bac4
+Stack trace:
+java.util.concurrent.ExecutionException: java.net.UnknownHostException: api.crashlytics.com
+java.net.UnknownHostException: api.crashlytics.com
+java.util.concurrent.ExecutionException: java.net.UnknownHostException: api.crashlytics.com
+	at java.util.concurrent.FutureTask$Sync.innerGet(FutureTask.java:222)
+	at java.util.concurrent.FutureTask.get(FutureTask.java:83)
+	at com.crashlytics.tools.android.ThreadedSDKManager.updateCachedSDK(ThreadedSDKManager.java:45)
+	at com.crashlytics.tools.ide.android.AbstractAndroidIde.updateThenRefreshSDKs(AbstractAndroidIde.java:132)
+	at com.crashlytics.tools.ide.android.AndroidPluginSupport$SDKUpdateBehavior.run(AndroidPluginSupport.java:77)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRunAndReset(FutureTask.java:317)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:150)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$101(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.runPeriodic(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:204)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:695)
+Caused by: java.net.UnknownHostException: api.crashlytics.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1191)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1117)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1053)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:102)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:314)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:357)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:218)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:194)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:85)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:108)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:186)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:106)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:57)
+	at com.crashlytics.api.RestfulWebApi.requestJSON(RestfulWebApi.java:696)
+	at com.crashlytics.api.RestfulWebApi.getJSON(RestfulWebApi.java:679)
+	at com.crashlytics.api.RestfulWebApi.getAndroidSDK(RestfulWebApi.java:777)
+	at com.crashlytics.tools.android.DefaultSDKManager.updateCachedSDK(DefaultSDKManager.java:94)
+	at com.crashlytics.tools.android.ThreadedSDKManager$2.call(ThreadedSDKManager.java:48)
+	at com.crashlytics.tools.android.ThreadedSDKManager$2.call(ThreadedSDKManager.java:45)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:206)
+	... 3 more
+
+
+!ENTRY com.crashlytics.tools.eclipse.core 2 0 2014-02-15 13:45:49.144
+!MESSAGE Crashlytics had a problem querying for a software update.
+Stack trace:
+java.net.UnknownHostException: api.crashlytics.com
+api.crashlytics.com
+java.net.UnknownHostException: api.crashlytics.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1191)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1117)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1053)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:102)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:314)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:357)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:218)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:194)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:85)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:108)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:186)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:106)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:57)
+	at com.crashlytics.api.RestfulWebApi.requestJSON(RestfulWebApi.java:696)
+	at com.crashlytics.api.RestfulWebApi.getJSON(RestfulWebApi.java:679)
+	at com.crashlytics.api.RestfulWebApi.getSoftwareIntegration(RestfulWebApi.java:752)
+	at com.crashlytics.tools.ide.android.AbstractAndroidIde.findPlatformUpdate(AbstractAndroidIde.java:241)
+	at com.crashlytics.tools.eclipse.EclipseUpdateFinder.findIntegration(EclipseUpdateFinder.java:41)
+	at com.crashlytics.tools.eclipse.EclipseUpdateFinder.findComponentsUpdate(EclipseUpdateFinder.java:79)
+	at com.crashlytics.tools.eclipse.EclipseUpdateFinder.findComponentsUpdate(EclipseUpdateFinder.java:1)
+	at com.crashlytics.tools.bootstrap.UpdateManager.updateDynamicComponents(UpdateManager.java:145)
+	at com.crashlytics.tools.bootstrap.UpdateManager$WorkerRunnable.checkForUpdates(UpdateManager.java:99)
+	at com.crashlytics.tools.bootstrap.UpdateManager$WorkerRunnable.run(UpdateManager.java:75)
+	at java.lang.Thread.run(Thread.java:695)
+
