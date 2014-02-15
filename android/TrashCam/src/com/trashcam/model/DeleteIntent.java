@@ -23,7 +23,7 @@ public class DeleteIntent extends Service {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		
-		Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Deleting...", Toast.LENGTH_SHORT).show();
 		
 	}
 
