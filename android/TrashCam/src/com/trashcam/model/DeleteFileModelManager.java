@@ -4,20 +4,23 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import com.trashcam.Utility;
-
-
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.trashcam.HashTable;
+import com.trashcam.Utility;
+
 public class DeleteFileModelManager {
+	private static final String TAG = DeleteFileModelManager.class
+			.getSimpleName();
+
 	private static DeleteFileModelManager instance;
 
-	public HashMap<String, DeleteFileModel> toBeDeleted;
+	public static HashMap<String, DeleteFileModel> toBeDeleted;
 
 	private DeleteFileModelManager() {
 		toBeDeleted = new HashMap<String, DeleteFileModel>();
@@ -26,12 +29,35 @@ public class DeleteFileModelManager {
 
 	public static DeleteFileModelManager getInstance() {
 		if (instance == null) {
-			new DeleteFileModelManager();
-			/*
-			 * LOAD FROM DB
-			 */
+			instance = new DeleteFileModelManager();
+			String saves = HashTable.get_entry(HashTable.DELETABLES);
+			if (saves != null && "".equals(saves)) {
+				Gson gson = new Gson();
+				toBeDeleted = new HashMap<String, DeleteFileModel>();
+				for (DeleteFileModel d : gson.fromJson(saves,
+						DeleteFileModel[].class)) {
+					try {
+						if (new File(d.fileUrl).exists()) {
+							toBeDeleted.put(d.fileUrl, d);
+						}
+					} catch (NullPointerException e) {
+						Log.v(TAG, " blank filename");
+					}
+				}
+			}
 		}
 		return instance;
+	}
+
+	public static void save() {
+		Gson gson = new Gson();
+		DeleteFileModel[] data = new DeleteFileModel[toBeDeleted.size()];
+		int x = 0;
+		for (String s : toBeDeleted.keySet()) {
+			data[x] = toBeDeleted.get(s);
+			x++;
+		}
+		HashTable.insert_entry(HashTable.DELETABLES, gson.toJson(data));
 	}
 
 	public void addFile(String path, int days, Context context) {
@@ -48,22 +74,24 @@ public class DeleteFileModelManager {
 		removeIfExist(new_picture);
 		toBeDeleted.put(new_picture.getAbsolutePath(), new DeleteFileModel(
 				new_picture, days));
-		
+
 		Log.w("Here", "Here");
 		Intent intent = new Intent();
 		Calendar calendar = Calendar.getInstance();
-		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
 		intent.setClass(context, DeleteIntent.class);
 		intent.putExtra("path", path);
-		PendingIntent pendingIntent  = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, Utility.getDateAfterInLong(days) + 10000, pendingIntent);
+		PendingIntent pendingIntent = PendingIntent.getService(context, 0,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarmManager.set(AlarmManager.RTC_WAKEUP,
+				Utility.getDateAfterInLong(days) + 10000, pendingIntent);
 		Log.w("There", "THere");
-		
+
 		/*
 		 * TODO: save to database also
 		 */
-		
-		
+
 	}
 
 	private void removeIfExist(File new_picture) {

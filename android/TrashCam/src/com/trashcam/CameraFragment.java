@@ -41,6 +41,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	private Handler mHandler = new Handler(Looper.getMainLooper());
 	private String currentPicturePath;
 	private boolean hasPaused;
+	private ImageView gallery;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,14 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				false);
 		capture = (ImageView) rootView.findViewById(R.id.camera_button);
 		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
+		gallery = (ImageView) rootView.findViewById(R.id.gallery);
 		flip = (ImageView) rootView.findViewById(R.id.flip);
 		share = (ImageView) rootView.findViewById(R.id.share);
 
 		capture.setOnClickListener(this);
 		flip.setOnClickListener(this);
 		share.setOnClickListener(this);
-
+		gallery.setOnClickListener(this);
 		share.setVisibility(View.GONE);
 		int xy[] = Utility.getScreenSize(getActivity());
 		int previewSizeWidth = xy[0];
@@ -99,6 +101,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onPause() {
 		hasPaused = true;
+		DeleteFileModelManager.save();
 		super.onPause();
 	}
 
@@ -124,6 +127,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			camPreview.CameraTakePicture(currentPicturePath);
 		}
 	};
+	private int day;
 
 	@Override
 	public void onClick(View v) {
@@ -133,6 +137,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				mHandler.postDelayed(takePicture, 50);
 				state_of_camera = PICTURE_STATE;
 				flip.setImageResource(R.drawable.ic_trash);
+				flip.setVisibility(View.VISIBLE);
 				capture.setImageResource(R.drawable.day1);
 				share.setVisibility(View.VISIBLE);
 			} else {
@@ -141,16 +146,19 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				}
 				switch (days) {
 				case 1:
+					day = 1;
 					capture.setImageResource(R.drawable.day1);
 					DeleteFileModelManager.getInstance().addFile(
 							currentPicturePath, 1, getActivity());
 					break;
 				case 2:
+					day = 2;
 					capture.setImageResource(R.drawable.day2);
 					DeleteFileModelManager.getInstance().addFile(
 							currentPicturePath, 2, getActivity());
 					break;
 				case 3:
+					day = 3;
 					capture.setImageResource(R.drawable.day3);
 					DeleteFileModelManager.getInstance().addFile(
 							currentPicturePath, 3, getActivity());
@@ -162,11 +170,6 @@ public class CameraFragment extends Fragment implements OnClickListener {
 
 		case R.id.flip:
 			if (state_of_camera == CAMERA_STATE) {
-				// mPreview.flipCamera();
-			} else {
-				/*
-				 * Delete current file
-				 */
 				DeleteFileModelManager.getInstance().deleteFileNow(
 						currentPicturePath);
 				resetCameraUI();
@@ -179,6 +182,13 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
 					currentPicturePath);
 			break;
+		case R.id.gallery:
+			// START GALLERY
+			// Intent intent = new Intent(getActivity(),);
+			// startActivity(intent);
+			String s = HashTable.get_entry(HashTable.DELETABLES);
+			Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+			break;
 		}
 	}
 
@@ -187,6 +197,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		capture.setImageResource(R.drawable.ic_camera);
 		state_of_camera = CAMERA_STATE;
 		share.setVisibility(View.GONE);
+		flip.setVisibility(View.GONE);
 		currentPicturePath = null;
 	}
 
@@ -215,5 +226,44 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		File mediaFile = new File(mediaStorageDir.getPath() + File.separator
 				+ "IMG_" + timeStamp + ".jpg");
 		return mediaFile;
+	}
+
+	public void setDayForCurrentFile(int i) {
+		switch (i) {
+		case 1:
+			day = 1;
+			capture.setImageResource(R.drawable.day1);
+			break;
+		case 2:
+			day = 2;
+			capture.setImageResource(R.drawable.day2);
+			break;
+		case 3:
+			day = 3;
+			capture.setImageResource(R.drawable.day3);
+			break;
+		case 4:
+			day = 4;
+			capture.setImageResource(R.drawable.day4);
+			break;
+		case 5:
+			day = 5;
+			capture.setImageResource(R.drawable.day5);
+			break;
+		case 6:
+			day = 6;
+			capture.setImageResource(R.drawable.day6);
+			break;
+		default:
+			day = 7;
+			capture.setImageResource(R.drawable.day7);
+			break;
+		}
+	}
+
+	public void confirm() {
+		if (currentPicturePath != null && !"".equals(currentPicturePath))
+			DeleteFileModelManager.getInstance().addFile(currentPicturePath,
+					day, getActivity());
 	}
 }

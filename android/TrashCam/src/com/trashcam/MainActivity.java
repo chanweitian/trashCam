@@ -1,51 +1,50 @@
 package com.trashcam;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends SingleFragmentActivity {
 	private static final String TAG = null;
-	TrashAdapter mAdapter;
-	ViewPager mPager;
 
 	private int mActivePointerId = 0;
 	private float mLastTouchY = 0;
 	private float dy;
 
+	private CameraFragment camFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 
-		/*
-		 * TODO: SHOULD INIT FROM DB!
-		 */
-
-		// Set this APK Full screen
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// Set this APK no title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.activity_main);
-		mAdapter = new TrashAdapter(getFragmentManager());
-		mPager = (ViewPager) findViewById(R.id.pager);
-		mPager.setAdapter(mAdapter);
-		mPager.setCurrentItem(1);
+		MainDatabase.initMainDB(this);
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	protected Fragment createFragment() {
+		if (camFragment == null) {
+			camFragment = new CameraFragment();
+		}
+		return camFragment;
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		// DO NOT DO ANYTHING IF NOT AT CAMEAR
-		Log.wtf(TAG, "reached" + mPager.getCurrentItem());
-		if (mPager.getCurrentItem() != 1)
-			return super.onTouchEvent(ev);
 
+		if (camFragment.state_of_camera == CameraFragment.CAMERA_STATE) {
+			return super.onTouchEvent(ev);
+		}
 		int action = MotionEventCompat.getActionMasked(ev);
 
 		switch (action) {
@@ -53,7 +52,7 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "Action was DOWN");
 			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 			final float y = MotionEventCompat.getY(ev, pointerIndex) * -1;
-			Log.d(TAG, "Y is: " + y);
+			// Log.d(TAG, "Y is: " + y);
 
 			// Remember where we started (for dragging)
 
@@ -64,7 +63,7 @@ public class MainActivity extends Activity {
 		}
 		case (MotionEvent.ACTION_MOVE): {
 
-			Log.d(TAG, "Action was MOVE");
+			// Log.d(TAG, "Action was MOVE");
 			final int pointerIndex = MotionEventCompat.findPointerIndex(ev,
 					mActivePointerId);
 			final float y = MotionEventCompat.getY(ev, pointerIndex) * -1;
@@ -77,23 +76,24 @@ public class MainActivity extends Activity {
 			}
 
 			int val = (int) dy / 70;
-			Log.v(TAG, "" + val);
-			Log.d(TAG, "Distance is: " + dy);
+			Log.v(TAG, "" + val + 1);
+			camFragment.setDayForCurrentFile(val + 1);
+			// Log.d(TAG, "Distance is: " + dy);
 
 			break;
 		}
 
 		case (MotionEvent.ACTION_UP): {
-			Log.d(TAG, "Action was UP");
+			camFragment.confirm();
 
 			break;
 		}
 		case (MotionEvent.ACTION_CANCEL):
-			Log.d(TAG, "Action was CANCEL");
+			// Log.d(TAG, "Action was CANCEL");
 			return true;
 		case (MotionEvent.ACTION_OUTSIDE):
-			Log.d(TAG, "Movement occurred outside bounds "
-					+ "of current screen element");
+			// Log.d(TAG, "Movement occurred outside bounds "
+			// + "of current screen element");
 			return true;
 			// default :
 			// return super.onTouchEvent(ev);
