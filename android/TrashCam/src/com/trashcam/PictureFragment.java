@@ -36,7 +36,7 @@ public class PictureFragment extends Fragment {
 	private String mediaStorageDir = new File(
 			Environment
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-	"MyCameraApp").getPath();
+	Constants.TRASH_FOLDER_PATH).getPath();
 	private String imagePath = mediaStorageDir + File.separator + "IMG_20140215_191211.jpg";
 
 	@Override
@@ -134,7 +134,7 @@ public class PictureFragment extends Fragment {
 		return rootView;
 	}
 	
-	private void shareFB() {
+	public void shareFB() {
 		try{
 		    Intent intent = new Intent(Intent.ACTION_SEND);
 		    intent.setType("image/jpeg");
@@ -166,7 +166,7 @@ public class PictureFragment extends Fragment {
 	}
 	
 	
-	private void shareTwitter(){
+	public void shareTwitter(){
 		try{
 		    Intent intent = new Intent(Intent.ACTION_SEND);
 		    intent.putExtra(Intent.EXTRA_TEXT, message);
@@ -198,7 +198,7 @@ public class PictureFragment extends Fragment {
 		}
 	}
 	
-	private void shareEmail(){
+	public void shareEmail(){
 		try{
 		    Intent intent = new Intent(Intent.ACTION_SEND);
 		    intent.putExtra(Intent.EXTRA_TEXT, message);
@@ -231,7 +231,7 @@ public class PictureFragment extends Fragment {
 		}
 	}
 	
-	private void shareWhatapps(){
+	public void shareWhatapps(){
 	
 		try{
 		    Intent intent = new Intent(Intent.ACTION_SEND);
