@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -47,6 +50,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	private AnimationDrawable animationCounter;
 	private ImageView animationArrowImageView;
 	private AnimationDrawable animationArrow;
+	MediaPlayer paperMusic;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +86,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		animationCounter = (AnimationDrawable) animImageView.getBackground();
 		animationArrow = (AnimationDrawable) animationArrowImageView
 				.getBackground();
+		
+		paperMusic = MediaPlayer.create(getActivity(), R.raw.paper);
 
 		capture.setOnClickListener(this);
 		flip.setOnClickListener(this);
@@ -264,6 +271,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 
 			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
 					currentPicturePath);
+			paperMusic.start();
 		}
 	}
 
