@@ -24,12 +24,6 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-<<<<<<< HEAD
-        public static final int action_settings=0x7f080000;
-    }
-    public static final class layout {
-        public static final int activity_main=0x7f030000;
-=======
         public static final int action_settings=0x7f080002;
         public static final int fragment_container=0x7f080001;
         public static final int pager=0x7f080000;
@@ -38,7 +32,7 @@ public final class R {
         public static final int activity_main=0x7f030000;
         public static final int activity_single_fragment_holder=0x7f030001;
         public static final int fragment_gallery=0x7f030002;
->>>>>>> 3ccd63bc978eccfe8a70310fc24cd921ab5e91e4
+        public static final int fragment_picture=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f070000;
