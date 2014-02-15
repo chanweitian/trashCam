@@ -21,3 +21,4 @@
 1392459366395	Rename field 'mActivity'
 1392460854151	Rename field 'pictureFile'
 1392461213916	Extract method 'removeIfExist'
+1392464485453	Rename resource 'share.png'

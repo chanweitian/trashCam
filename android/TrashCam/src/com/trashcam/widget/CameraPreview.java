@@ -1,9 +1,15 @@
 package com.trashcam.widget;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.trashcam.Constants;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -14,30 +20,24 @@ public class CameraPreview extends SurfaceView implements
 		SurfaceHolder.Callback {
 	private static final String TAG = CameraPreview.class.getSimpleName();
 	private SurfaceHolder mHolder;
-	private Camera mCamera;
+	public Camera mCamera;
 	private Context mContext;
 	public static final int BACK_CAM_ID = 0;
 	public static final int FRONT_CAM_ID = 1;
 	private int currentCameraId = 0;
 
 	@SuppressWarnings("deprecation")
-	public CameraPreview(Context context, Camera camera) {
+	public CameraPreview(Context context) {
 		super(context);
 		mContext = context;
-		mCamera = camera;
 		// Install a SurfaceHolder.Callback so we get notified when the
 		// underlying surface is created and destroyed.
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		// deprecated setting, but required on Android versions prior to 3.0
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		// get Camera parameters
-		Camera.Parameters params = mCamera.getParameters();
-		// set the focus mode
-		params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-		// set Camera parameters
-		params.set("orientation", "landscape");
-		mCamera.setParameters(params);
+
+		startCamera(0);
 		setCameraDisplayOrientation();
 	}
 
@@ -87,19 +87,51 @@ public class CameraPreview extends SurfaceView implements
 		}
 	}
 
+	public static File getOutputMediaFile(int type) {
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+
+		File mediaStorageDir = new File(
+				Environment
+						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				Constants.TRASH_FOLDER_PATH);
+		// This location works best if you want the created images to be shared
+		// between applications and persist after your app has been uninstalled.
+
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(new Date());
+		File mediaFile = null;
+		mediaFile = new File(mediaStorageDir.getPath() + File.separator
+				+ "IMG_" + timeStamp + ".jpg");
+		return mediaFile;
+	}
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// empty. Take care of releasing the Camera preview in your activity.
-		mCamera.stopPreview();
-		mCamera.release();
+		if (mCamera != null) {
+			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
+		}
 	}
 
 	public void startCamera(int cameraId) {
-		mCamera.stopPreview();
-		// NB: if you don't release the current camera before switching, you app
-		// will crash
-		mCamera.release();
-
 		mCamera = Camera.open(cameraId);
+
+		// get Camera parameters
+		Camera.Parameters params = mCamera.getParameters();
+		// set the focus mode
+		params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		// set Camera parameters
+		params.set("orientation", "landscape");
+		mCamera.setParameters(params);
 		try {
 			// this step is critical or preview on new camera will no know where
 			// to render to
@@ -108,10 +140,26 @@ public class CameraPreview extends SurfaceView implements
 			e.printStackTrace();
 		}
 		mCamera.startPreview();
-		setCameraDisplayOrientation();
+	}
+
+	public void stopCamera() {
+		if (mCamera == null)
+			return;
+		try {
+			mCamera.cancelAutoFocus();
+			mCamera.stopPreview();
+
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} finally {
+			// Make sure that at least these two calls are made
+			mCamera.release();
+			mCamera = null;
+		}
 	}
 
 	public void flipCamera() {
+		stopCamera();
 		// swap the id of the camera to be used
 		if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
 			currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -129,7 +177,6 @@ public class CameraPreview extends SurfaceView implements
 			// preview surface does not exist
 			return;
 		}
-
 		// stop preview before making changes
 		try {
 			mCamera.stopPreview();

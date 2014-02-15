@@ -10,7 +10,7 @@ public class TrashAdapter extends FragmentPagerAdapter {
 
 	public TrashAdapter(FragmentManager fm) {
 		super(fm);
-		// camera = new CameraFragment();
+		camera = new CameraFragment();
 		gallery = new GalleryFragment();
 	}
 

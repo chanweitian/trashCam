@@ -28,7 +28,6 @@ import com.trashcam.widget.CameraPreview;
 public class CameraFragment extends Fragment implements OnClickListener {
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static final String TAG = CameraFragment.class.getSimpleName();
-	private Camera mCamera;
 	private CameraPreview mPreview;
 	private ImageView capture;
 	private FrameLayout cameraFrameLayout;
@@ -38,6 +37,22 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	public static final int CAMERA_STATE = 0;
 	public int days = 1;
 	private boolean hasPaused;
+	private ImageView share;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		if (!checkCameraHardware(getActivity())) {
+			// what todo if camera not found?
+			Log.wtf(TAG, "CAMERA NOT FOUND");
+			throw new IllegalStateException("You got no camera");
+		}
+		if (Camera.getNumberOfCameras() == 1) {
+			flip.setVisibility(View.GONE);
+		}
+		state_of_camera = CAMERA_STATE;
+		mPreview = new CameraPreview(getActivity());
+		super.onCreate(savedInstanceState);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,10 +62,15 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		capture = (ImageView) rootView.findViewById(R.id.camera_button);
 		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
 		flip = (ImageView) rootView.findViewById(R.id.flip);
-		cameraFrameLayout.addView(mPreview);
+		share = (ImageView) rootView.findViewById(R.id.share);
+
 		capture.setOnClickListener(this);
 		flip.setOnClickListener(this);
+		share.setOnClickListener(this);
+
+		cameraFrameLayout.addView(mPreview);
 		hasPaused = false;
+		share.setVisibility(View.GONE);
 		return rootView;
 	}
 
@@ -64,23 +84,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onPause() {
 		hasPaused = true;
+		mPreview.stopCamera();
 		super.onPause();
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		if (!checkCameraHardware(getActivity())) {
-			// what todo if camera not found?
-			Log.wtf(TAG, "CAMERA NOT FOUND");
-			throw new IllegalStateException("You got no camera");
-		}
-		if (Camera.getNumberOfCameras() == 1) {
-			flip.setVisibility(View.GONE);
-		}
-		state_of_camera = CAMERA_STATE;
-		mCamera = getCameraInstance();
-		mPreview = new CameraPreview(getActivity(), mCamera);
-		super.onCreate(savedInstanceState);
 	}
 
 	/** Check if this device has a camera */
@@ -95,22 +100,13 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	public static Camera getCameraInstance() {
-		Camera c = null;
-		try {
-			c = Camera.open(); // attempt to get a Camera instance
-		} catch (Exception e) {
-			// Camera is not available (in use or does not exist)
-		}
-		return c; // returns null if camera is unavailable
-	}
-
 	private PictureCallback mPicture = new PictureCallback() {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 
-			currentPictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+			currentPictureFile = CameraPreview
+					.getOutputMediaFile(MEDIA_TYPE_IMAGE);
 
 			if (currentPictureFile == null) {
 				Log.d(TAG,
@@ -129,47 +125,24 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			} catch (IOException e) {
 				Log.d(TAG, "Error accessing file: " + e.getMessage());
 			}
+
+			if (currentPictureFile == null) {
+				throw new IllegalStateException("this should not be null");
+			}
 		}
 	};
 	private File currentPictureFile;
-
-	private static File getOutputMediaFile(int type) {
-		// To be safe, you should check that the SDCard is mounted
-		// using Environment.getExternalStorageState() before doing this.
-
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				Constants.TRASH_FOLDER_PATH);
-		// This location works best if you want the created images to be shared
-		// between applications and persist after your app has been uninstalled.
-
-		// Create the storage directory if it does not exist
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
-
-		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
-		File mediaFile = null;
-		mediaFile = new File(mediaStorageDir.getPath() + File.separator
-				+ "IMG_" + timeStamp + ".jpg");
-		return mediaFile;
-	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.camera_button:
 			if (state_of_camera == CAMERA_STATE) {
-				mCamera.takePicture(null, null, mPicture);
+				mPreview.mCamera.takePicture(null, null, mPicture);
 				state_of_camera = PICTURE_STATE;
 				flip.setImageResource(R.drawable.ic_trash);
 				capture.setImageResource(R.drawable.day1);
+				share.setVisibility(View.VISIBLE);
 			} else {
 				if (days == 4) {
 					days = 1;
@@ -204,12 +177,22 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				 */
 				DeleteFileModelManager.getInstance().deleteFileNow(
 						currentPictureFile);
-				currentPictureFile = null;
-				mPreview.startCamera(CameraPreview.BACK_CAM_ID);
-				capture.setImageResource(R.drawable.ic_camera);
-				state_of_camera = CAMERA_STATE;
+				resetCameraUI();
 			}
 			break;
+		case R.id.share:
+			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
+					currentPictureFile.getAbsolutePath());
+			break;
 		}
+	}
+
+	public void resetCameraUI() {
+		mPreview.startCamera(CameraPreview.BACK_CAM_ID);
+		flip.setImageResource(R.id.flip);
+		capture.setImageResource(R.drawable.ic_camera);
+		state_of_camera = CAMERA_STATE;
+		share.setVisibility(View.GONE);
+		currentPictureFile = null;
 	}
 }
