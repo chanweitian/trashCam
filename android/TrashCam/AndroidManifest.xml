@@ -37,6 +37,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.trashcam.FullScreenActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <service android:name="com.trashcam.model.DeleteIntent" >
         </service>

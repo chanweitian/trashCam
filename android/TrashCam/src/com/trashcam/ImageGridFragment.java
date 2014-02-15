@@ -140,9 +140,9 @@ public class ImageGridFragment extends Fragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 		String url = (String) v.getTag();
-		// Intent intent = new Intent(getActivity(),);
-		// intent.putExtra("url", url);
-		// getActivity().startActivity(intent);
+		Intent intent = new Intent(getActivity(), FullScreenActivity.class);
+		intent.putExtra("url", url);
+		getActivity().startActivity(intent);
 	}
 
 	/**
