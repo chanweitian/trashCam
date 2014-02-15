@@ -1,0 +1,34 @@
+package com.trashcam.model;
+
+import java.io.File;
+import java.util.HashMap;
+
+public class DeleteFileModelManager {
+	private DeleteFileModelManager instance;
+
+	public HashMap<String, DeleteFileModel> toBeDeleted;
+
+	private DeleteFileModelManager() {
+		toBeDeleted = new HashMap<String, DeleteFileModel>();
+		instance = this;
+	}
+
+	public DeleteFileModelManager getInstance() {
+		return instance;
+	}
+
+	public void addFile(File new_picture, int days) {
+		if (toBeDeleted.containsKey(new_picture.getAbsolutePath())) {
+			toBeDeleted.remove(new_picture.getAbsolutePath());
+			/*
+			 * delete from database
+			 */
+		}
+		toBeDeleted.put(new_picture.getAbsolutePath(), new DeleteFileModel(
+				new_picture, days));
+		/*
+		 * TODO: save to database also
+		 */
+	}
+
+}

@@ -9,3 +9,15 @@
 1392448942513	Delete element
 1392448945480	Delete element
 1392448979118	Delete element
+1392450687229	Rename field 'preview'
+1392455831061	Delete element
+1392455833611	Delete element
+1392455835428	Delete element
+1392455837495	Delete element
+1392455852547	Rename resource '1day.png'
+1392455863597	Rename resource '2day.png'
+1392455869415	Rename resource '3day.png'
+1392457402995	Delete element
+1392459366395	Rename field 'mActivity'
+1392460854151	Rename field 'pictureFile'
+1392461213916	Extract method 'removeIfExist'

@@ -1,0 +1,5 @@
+package com.trashcam.model;
+
+public class DeleteFileModel {
+
+}

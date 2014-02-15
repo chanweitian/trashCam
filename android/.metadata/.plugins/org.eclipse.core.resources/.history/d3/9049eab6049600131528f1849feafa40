@@ -1,7 +1,0 @@
-package com.trashcam;
-
-import android.app.Fragment;
-
-public class CameraFragment extends Fragment {
-
-}
