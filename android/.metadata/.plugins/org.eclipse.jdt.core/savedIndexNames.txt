@@ -1,3 +1,2 @@
 INDEX VERSION 1.126+/Users/napcrisis/trashCam/android/.metadata/.plugins/org.eclipse.jdt.core
-2947254388.index
 1542256292.index
