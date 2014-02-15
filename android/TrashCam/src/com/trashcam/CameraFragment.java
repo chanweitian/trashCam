@@ -38,7 +38,6 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	public static final int PICTURE_STATE = 1;
 	public static final int CAMERA_STATE = 0;
 	public int days = 1;
-	private ImageView share;
 	private CameraPreview camPreview;
 	private Handler mHandler = new Handler(Looper.getMainLooper());
 	private String currentPicturePath;
@@ -74,7 +73,6 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
 		gallery = (ImageView) rootView.findViewById(R.id.gallery);
 		flip = (ImageView) rootView.findViewById(R.id.flip);
-		share = (ImageView) rootView.findViewById(R.id.share);
 		animImageView = (ImageView) rootView.findViewById(R.id.ivAnimation);
 		animationArrowImageView = (ImageView) rootView
 				.findViewById(R.id.arrowAnimations);
@@ -86,9 +84,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 
 		capture.setOnClickListener(this);
 		flip.setOnClickListener(this);
-		share.setOnClickListener(this);
 		gallery.setOnClickListener(this);
-		share.setVisibility(View.GONE);
 		int xy[] = Utility.getScreenSize(getActivity());
 		int previewSizeWidth = xy[0];
 		int previewSizeHeight = xy[1];
@@ -170,12 +166,6 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				camPreview.startCameraPreview();
 			}
 			break;
-		case R.id.share:
-			Toast.makeText(getActivity(), currentPicturePath, Toast.LENGTH_LONG)
-					.show();
-			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
-					currentPicturePath);
-			break;
 		case R.id.gallery:
 			String s = DeleteFileModelManager.getJson();
 			if ("".equals(s) || s == null) {
@@ -195,11 +185,9 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		flip.setImageResource(R.id.flip);
 		capture.setImageResource(R.drawable.ic_camera);
 		state_of_camera = CAMERA_STATE;
-		share.setVisibility(View.GONE);
 		flip.setVisibility(View.GONE);
 		capture.setVisibility(View.VISIBLE);
 		animationArrowImageView.setVisibility(View.GONE);
-		currentPicturePath = null;
 	}
 
 	private static File getOutputMediaFile() {
@@ -273,6 +261,9 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			Toast.makeText(getActivity(),
 					"Your photo is set to delete in " + day + " days",
 					Toast.LENGTH_LONG).show();
+
+			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
+					currentPicturePath);
 		}
 	}
 
@@ -284,7 +275,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		animImageView.setVisibility(View.GONE);
 		animationArrowImageView.setVisibility(View.VISIBLE);
 		flip.setVisibility(View.VISIBLE);
-		share.setVisibility(View.VISIBLE);
 		gallery.setVisibility(View.VISIBLE);
+
 	}
 }

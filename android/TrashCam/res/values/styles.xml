@@ -22,4 +22,8 @@
         <item name="android:listSelector">@drawable/photogrid_list_selector</item>
     </style>
 
+    <style name="dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+    </style>
+
 </resources>

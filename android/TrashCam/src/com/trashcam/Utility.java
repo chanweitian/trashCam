@@ -63,7 +63,7 @@ public class Utility {
 		final Dialog dialog = new Dialog(context);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.share_dialog);
-
+		dialog.getWindow().getAttributes().windowAnimations =R.style.dialog_animation;
 		// DisplayMetrics metrics = getResources().getDisplayMetrics();
 		// int width = metrics.widthPixels;
 		int height = Utility.getScreenSize(context)[1];
