@@ -273,12 +273,12 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			camPreview.startCameraPreview();
 			if (positive) {
 				camPreview.startCameraPreview();
-				Toast.makeText(getActivity(),
-						"Your photo is set to delete in " + day + " days",
-						Toast.LENGTH_LONG).show();
 				Utility.openShareDialog(getActivity(),
 						Constants.TRASHCAM_MESSAGE, currentPicturePath);
 			}
+			Toast.makeText(getActivity(),
+					"Your photo is set to delete in " + day + " days",
+					Toast.LENGTH_LONG).show();
 			paperMusic.start();
 		}
 	}

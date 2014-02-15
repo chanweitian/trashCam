@@ -11,8 +11,6 @@
 <fullyQualifiedTypeName name="java.lang.IllegalStateException"/>
 <fullyQualifiedTypeName name="com.trashcam.R.id"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
-<fullyQualifiedTypeName name="android.view.View"/>
-<fullyQualifiedTypeName name="com.trashcam.R.drawable"/>
 <fullyQualifiedTypeName name="com.trashcam.MainActivity"/>
 <fullyQualifiedTypeName name="com.trashcam.TrashAdapter"/>
 <fullyQualifiedTypeName name="java.util.Calendar"/>
@@ -28,7 +26,6 @@
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="java.lang.NullPointerException"/>
-<fullyQualifiedTypeName name="com.trashcam.CameraFragment"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="com.trashcam.HashTable"/>
 <fullyQualifiedTypeName name="com.google.gson.Gson"/>
@@ -37,11 +34,16 @@
 <fullyQualifiedTypeName name="com.nostra13.universalimageloader.core.ImageLoader"/>
 <fullyQualifiedTypeName name="com.trashcam.ImageGridActivity"/>
 <fullyQualifiedTypeName name="com.trashcam.MainDatabase"/>
-<fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="com.trashcam.SingleFragmentActivity"/>
 <fullyQualifiedTypeName name="android.app.Fragment"/>
 <fullyQualifiedTypeName name="com.trashcam.ImageGridFragment"/>
 <fullyQualifiedTypeName name="com.trashcam.model.DeleteFileModelManager"/>
 <fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
+<fullyQualifiedTypeName name="com.trashcam.CameraFragment"/>
+<fullyQualifiedTypeName name="java.lang.Thread"/>
+<fullyQualifiedTypeName name="android.widget.Toast"/>
+<fullyQualifiedTypeName name="com.trashcam.R.drawable"/>
+<fullyQualifiedTypeName name="android.view.View"/>
+<fullyQualifiedTypeName name="android.graphics.Matrix"/>
 </qualifiedTypeNameHistroy>

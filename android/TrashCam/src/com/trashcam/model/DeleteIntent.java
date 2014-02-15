@@ -22,9 +22,6 @@ public class DeleteIntent extends Service {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		
-		Toast.makeText(this, "Deleting...", Toast.LENGTH_SHORT).show();
-		
 	}
 
 	@Override
@@ -32,7 +29,6 @@ public class DeleteIntent extends Service {
 		// TODO Auto-generated method stub
 		Bundle bundle = intent.getExtras();
 		String path = bundle.getString("path");
-		Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
 		File thisFile = new File(path);
 		thisFile.delete();
 		
