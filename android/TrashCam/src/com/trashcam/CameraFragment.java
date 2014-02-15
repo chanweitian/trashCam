@@ -217,7 +217,14 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		return mediaFile;
 	}
 
+	boolean positive = false;
+
 	public void setDayForCurrentFile(int i) {
+		positive = false;
+		if (i > 0) {
+			positive = true;
+		}
+		i = Math.abs(i);
 		capture.setVisibility(View.VISIBLE);
 		animationArrowImageView.setVisibility(View.GONE);
 		switch (i) {
@@ -258,12 +265,16 @@ public class CameraFragment extends Fragment implements OnClickListener {
 					day, getActivity());
 			resetCameraUI();
 			camPreview.startCameraPreview();
-			Toast.makeText(getActivity(),
-					"Your photo is set to delete in " + day + " days",
-					Toast.LENGTH_LONG).show();
+			if (positive) {
+				Toast.makeText(getActivity(),
+						"Your photo is set to delete in " + day + " days",
+						Toast.LENGTH_LONG).show();
 
-			Utility.openShareDialog(getActivity(), Constants.TRASHCAM_MESSAGE,
-					currentPicturePath);
+				Utility.openShareDialog(getActivity(),
+						Constants.TRASHCAM_MESSAGE, currentPicturePath);
+			} else {
+
+			}
 		}
 	}
 
