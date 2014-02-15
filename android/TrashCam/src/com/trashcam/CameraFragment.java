@@ -85,12 +85,14 @@ public class CameraFragment extends Fragment implements OnClickListener {
 
 		cameraFrameLayout.addView(camView, new LayoutParams(previewSizeWidth,
 				previewSizeHeight));
+		hasPaused = false;
 		return rootView;
 	}
 
 	@Override
 	public void onResume() {
-		resetCameraUI();
+		if (hasPaused)
+			resetCameraUI();
 		super.onResume();
 	}
 
@@ -173,6 +175,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 				DeleteFileModelManager.getInstance().deleteFileNow(
 						currentPicturePath);
 				resetCameraUI();
+				camPreview.startCameraPreview();
 			}
 			break;
 		case R.id.share:
@@ -190,6 +193,5 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		state_of_camera = CAMERA_STATE;
 		share.setVisibility(View.GONE);
 		currentPicturePath = null;
-		camPreview.startCameraPreview();
 	}
 }
