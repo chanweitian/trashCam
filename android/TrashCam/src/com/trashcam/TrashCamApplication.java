@@ -17,7 +17,7 @@ public class TrashCamApplication extends Application {
 
 	public static void initImageLoader(Context context) {
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory(true).cacheOnDisc(true).build();
+				.build();
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				context).defaultDisplayImageOptions(defaultOptions).build();
 		ImageLoader.getInstance().init(config);

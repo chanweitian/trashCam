@@ -19,6 +19,7 @@ package com.trashcam;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -138,7 +139,10 @@ public class ImageGridFragment extends Fragment implements
 	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		// trigger xr's codes
+		String url = (String) v.getTag();
+		// Intent intent = new Intent(getActivity(),);
+		// intent.putExtra("url", url);
+		// getActivity().startActivity(intent);
 	}
 
 	/**
@@ -247,9 +251,12 @@ public class ImageGridFragment extends Fragment implements
 
 			String uri = "file://" + data[index].fileUrl;
 			imageloader.displayImage(uri, imageView);
+			imageView.setTag(uri);
 			return imageView;
 		}
 
+//layout is not to design standard
+//days are wrong
 		/**
 		 * Sets the item height. Useful for when we know the column width so the
 		 * height can be set to match.

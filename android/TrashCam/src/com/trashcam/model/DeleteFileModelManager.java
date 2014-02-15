@@ -3,6 +3,7 @@ package com.trashcam.model;
 import java.io.File;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -20,10 +21,10 @@ public class DeleteFileModelManager {
 
 	private static DeleteFileModelManager instance;
 
-	public static HashMap<String, DeleteFileModel> toBeDeleted;
+	public static LinkedHashMap<String, DeleteFileModel> toBeDeleted;
 
 	private DeleteFileModelManager() {
-		toBeDeleted = new HashMap<String, DeleteFileModel>();
+		toBeDeleted = new LinkedHashMap<String, DeleteFileModel>();
 		instance = this;
 	}
 
@@ -33,7 +34,7 @@ public class DeleteFileModelManager {
 			String saves = HashTable.get_entry(HashTable.DELETABLES);
 			if (saves != null && "".equals(saves)) {
 				Gson gson = new Gson();
-				toBeDeleted = new HashMap<String, DeleteFileModel>();
+				toBeDeleted = new LinkedHashMap<String, DeleteFileModel>();
 				for (DeleteFileModel d : gson.fromJson(saves,
 						DeleteFileModel[].class)) {
 					try {
