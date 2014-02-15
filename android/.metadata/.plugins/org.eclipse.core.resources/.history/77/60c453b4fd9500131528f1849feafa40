@@ -1,0 +1,23 @@
+package com.trashcam;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
+
+import com.trashcam.MainActivity.ArrayListFragment;
+
+public static class TrashAdapter extends FragmentPagerAdapter {
+	public MyAdapter(FragmentManager fm) {
+		super(fm);
+	}
+
+	@Override
+	public int getCount() {
+		return NUM_ITEMS;
+	}
+
+	@Override
+	public Fragment getItem(int position) {
+		return ArrayListFragment.newInstance(position);
+	}
+}
