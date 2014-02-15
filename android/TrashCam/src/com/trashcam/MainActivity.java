@@ -67,23 +67,27 @@ public class MainActivity extends SingleFragmentActivity {
 		}
 		case (MotionEvent.ACTION_MOVE): {
 
-			// Log.d(TAG, "Action was MOVE");
-			final int pointerIndex = MotionEventCompat.findPointerIndex(ev,
-					mActivePointerId);
-			final float y = MotionEventCompat.getY(ev, pointerIndex) * -1;
-			Log.d(TAG, "Y is: " + y);
-			// Calculate the distance mov
-			dy = y - mLastTouchY;
-
-			if (dy < 0) {
-				dy = 0;
+			
+			try {
+				// Log.d(TAG, "Action was MOVE");
+				final int pointerIndex = MotionEventCompat.findPointerIndex(ev,
+						mActivePointerId);
+				final float y = MotionEventCompat.getY(ev, pointerIndex) * -1;
+				Log.d(TAG, "Y is: " + y);
+				// Calculate the distance mov
+				dy = y - mLastTouchY;
+	
+				if (dy < 0) {
+					dy = 0;
+				}
+	
+				int val = (int) dy / 70;
+				Log.v(TAG, "" + val + 1);
+				camFragment.setDayForCurrentFile(val + 1);
+				// Log.d(TAG, "Distance is: " + dy);
+			} catch (Exception e){
+				e.printStackTrace();
 			}
-
-			int val = (int) dy / 70;
-			Log.v(TAG, "" + val + 1);
-			camFragment.setDayForCurrentFile(val + 1);
-			// Log.d(TAG, "Distance is: " + dy);
-
 			break;
 		}
 

@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,6 +44,10 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	private String currentPicturePath;
 	private boolean hasPaused;
 	private ImageView gallery;
+	private ImageView animImageView;
+	private AnimationDrawable animationCounter;
+	private ImageView animationArrowImageView;
+	private AnimationDrawable animationArrow;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,11 +69,20 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_camera, container,
 				false);
+
 		capture = (ImageView) rootView.findViewById(R.id.camera_button);
 		cameraFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera);
 		gallery = (ImageView) rootView.findViewById(R.id.gallery);
 		flip = (ImageView) rootView.findViewById(R.id.flip);
 		share = (ImageView) rootView.findViewById(R.id.share);
+		animImageView = (ImageView) rootView.findViewById(R.id.ivAnimation);
+		animationArrowImageView = (ImageView) rootView
+				.findViewById(R.id.arrowAnimations);
+		animImageView.setBackgroundResource(R.drawable.animatecounter);
+		animationArrowImageView.setBackgroundResource(R.drawable.animatearrow);
+		animationCounter = (AnimationDrawable) animImageView.getBackground();
+		animationArrow = (AnimationDrawable) animationArrowImageView
+				.getBackground();
 
 		capture.setOnClickListener(this);
 		flip.setOnClickListener(this);
@@ -81,7 +95,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		SurfaceView camView = new SurfaceView(getActivity());
 		SurfaceHolder camHolder = camView.getHolder();
 		camPreview = new CameraPreview(getActivity(), previewSizeWidth,
-				previewSizeHeight);
+				previewSizeHeight, this);
 
 		camHolder.addCallback(camPreview);
 		camHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -96,6 +110,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	public void onResume() {
 		if (hasPaused)
 			resetCameraUI();
+		animationArrow.start();
 		super.onResume();
 	}
 
@@ -125,6 +140,7 @@ public class CameraFragment extends Fragment implements OnClickListener {
 			File file = getOutputMediaFile();
 			currentPicturePath = file.getAbsolutePath();
 			camPreview.CameraTakePicture(currentPicturePath);
+
 		}
 	};
 	private int day;
@@ -135,11 +151,12 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		case R.id.camera_button:
 			if (state_of_camera == CAMERA_STATE) {
 				mHandler.postDelayed(takePicture, 50);
-				state_of_camera = PICTURE_STATE;
 				flip.setImageResource(R.drawable.ic_trash);
-				flip.setVisibility(View.VISIBLE);
-				capture.setImageResource(R.drawable.day1);
-				share.setVisibility(View.VISIBLE);
+				capture.setVisibility(View.GONE);
+				animImageView.setVisibility(View.VISIBLE);
+				animationCounter.start();
+				capture.setOnClickListener(null);
+				gallery.setVisibility(View.GONE);
 			} else {
 				resetCameraUI();
 			}
@@ -160,13 +177,16 @@ public class CameraFragment extends Fragment implements OnClickListener {
 					currentPicturePath);
 			break;
 		case R.id.gallery:
-			// START GALLERY
-			Intent intent = new Intent(getActivity(), ImageGridActivity.class);
 			String s = DeleteFileModelManager.getJson();
-			Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
-			intent.putExtra("wtf", s);
-			getActivity().startActivity(intent);
-
+			if ("".equals(s) || s == null) {
+				Toast.makeText(getActivity(), "You have no photos",
+						Toast.LENGTH_LONG).show();
+			} else {
+				Intent intent = new Intent(getActivity(),
+						ImageGridActivity.class);
+				intent.putExtra("wtf", s);
+				getActivity().startActivity(intent);
+			}
 			break;
 		}
 	}
@@ -177,6 +197,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		state_of_camera = CAMERA_STATE;
 		share.setVisibility(View.GONE);
 		flip.setVisibility(View.GONE);
+		capture.setVisibility(View.VISIBLE);
+		animationArrowImageView.setVisibility(View.GONE);
 		currentPicturePath = null;
 	}
 
@@ -208,6 +230,8 @@ public class CameraFragment extends Fragment implements OnClickListener {
 	}
 
 	public void setDayForCurrentFile(int i) {
+		capture.setVisibility(View.VISIBLE);
+		animationArrowImageView.setVisibility(View.GONE);
 		switch (i) {
 		case 1:
 			day = 1;
@@ -244,7 +268,23 @@ public class CameraFragment extends Fragment implements OnClickListener {
 		if (currentPicturePath != null && !"".equals(currentPicturePath)) {
 			DeleteFileModelManager.getInstance().addFile(currentPicturePath,
 					day, getActivity());
-
+			resetCameraUI();
+			camPreview.startCameraPreview();
+			Toast.makeText(getActivity(),
+					"Your photo is set to delete in " + day + " days",
+					Toast.LENGTH_LONG).show();
 		}
+	}
+
+	public void stopAnimation() {
+		// TODO Auto-generated method stub
+		capture.setOnClickListener(this);
+		capture.setImageResource(R.drawable.day1);
+		state_of_camera = PICTURE_STATE;
+		animImageView.setVisibility(View.GONE);
+		animationArrowImageView.setVisibility(View.VISIBLE);
+		flip.setVisibility(View.VISIBLE);
+		share.setVisibility(View.VISIBLE);
+		gallery.setVisibility(View.VISIBLE);
 	}
 }

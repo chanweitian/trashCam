@@ -25,8 +25,6 @@
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="android.app.Activity"/>
-<fullyQualifiedTypeName name="android.app.Fragment"/>
-<fullyQualifiedTypeName name="com.trashcam.model.DeleteFileModelManager"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="java.lang.NullPointerException"/>
@@ -40,4 +38,10 @@
 <fullyQualifiedTypeName name="com.trashcam.ImageGridActivity"/>
 <fullyQualifiedTypeName name="com.trashcam.MainDatabase"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
+<fullyQualifiedTypeName name="com.trashcam.SingleFragmentActivity"/>
+<fullyQualifiedTypeName name="android.app.Fragment"/>
+<fullyQualifiedTypeName name="com.trashcam.ImageGridFragment"/>
+<fullyQualifiedTypeName name="com.trashcam.model.DeleteFileModelManager"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
 </qualifiedTypeNameHistroy>

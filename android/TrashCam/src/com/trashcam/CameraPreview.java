@@ -32,12 +32,14 @@ public class CameraPreview implements SurfaceHolder.Callback,
 	private String NowPictureFileName;
 	private Boolean TakePicture = false;
 	private Context mContext;
+	private CameraFragment frag;
 
 	public CameraPreview(Context mContext, int PreviewlayoutWidth,
-			int PreviewlayoutHeight) {
+			int PreviewlayoutHeight, CameraFragment frag) {
 		this.mContext = mContext;
 		PreviewSizeWidth = PreviewlayoutWidth;
 		PreviewSizeHeight = PreviewlayoutHeight;
+		this.frag = frag;
 	}
 
 	@Override
@@ -189,6 +191,14 @@ public class CameraPreview implements SurfaceHolder.Callback,
 				NowCamera.takePicture(shutterCallback, rawPictureCallback,
 						jpegPictureCallback);
 				TakePicture = false;
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				frag.stopAnimation();
 			}
 		}
 	};
@@ -212,13 +222,10 @@ public class CameraPreview implements SurfaceHolder.Callback,
 						data.length);
 				FileOutputStream out = new FileOutputStream(NowPictureFileName);
 				bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-				DeleteFileModelManager.getInstance().addFile(
-						NowPictureFileName, 1, mContext);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	};
 
-	
 }
